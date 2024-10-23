@@ -118,4 +118,5 @@ class NotionAPI:
             print("Success:", response.json())
         else:
             print("Error:", response.status_code, response.text)
+            return None
         return response.json()
