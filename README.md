@@ -1,4 +1,5 @@
-**Notion API Python Client**
+Notion API Python Client
+------------
 
 This project provides a Python class (`NotionAPI`) to interact with the Notion API. It allows you to:
 
@@ -19,7 +20,7 @@ This project provides a Python class (`NotionAPI`) to interact with the Notion A
 **Usage**
 
 1. **Obtain your Notion API token:**
-   - Create an integration in your Notion workspace ([invalid URL removed]).
+   - Create an integration in your Notion workspace ([Notion Integrations](https://www.notion.so/profile/integrations)).
    - Choose a name and select "Integrate with another service."
    - Copy the "Internal Integration Token."
 
@@ -80,17 +81,17 @@ This project provides a Python class (`NotionAPI`) to interact with the Notion A
    new_title = "My Updated Page Title"
    new_content = "This is the updated content for the page."
    response = api.set_page_content(page_id, new_title, new_content)
-   if response.status_code == 200:
-       print("Page content updated successfully!")
-   else:
-       print(f"Error updating page content: {response.status_code}")
    ```
 
 **Important Notes**
 
 - The `get_page_content` method currently only retrieves the content of the first paragraph. Consider implementing additional logic to handle more complex page structures.
-- The `set_page_content` method currently sets a basic heading and paragraph. You can explore the Notion API documentation for more formatting options and block types ([invalid URL removed]).
+- The `set_page_content` method currently sets a basic heading and paragraph. You can explore the Notion API documentation for more formatting options and [block types](https://developers.notion.com/reference/block).
 
 **Contributing**
 
 Feel free to fork this repository, make changes, and submit pull requests! We welcome contributions to improve the functionality and features of this library.
+
+Contact
+------------
+For inquiries or issues, please email [guilesgarcia@gmail.com](mailto:guilesgarcia@gmail.com) or open an issue.
