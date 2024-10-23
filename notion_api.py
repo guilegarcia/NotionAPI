@@ -20,6 +20,25 @@ class NotionAPI:
             "Authorization": f"Bearer {self.token}"
         }
 
+    @staticmethod
+    def _extract_blocks_content(content):
+        """
+        Extracts plain text content from a list of blocks within a notion page.
+        """
+        content_list = list()
+
+        for block in content['results']:
+            block_type = block['type']
+
+            # Check if the block has content (rich_text)
+            if block[block_type]['rich_text']:
+                # Extract plain_text from each rich_text object within the block
+                for rich_text in block[block_type]['rich_text']:
+                    content_list.append(rich_text['plain_text'])
+
+        # Join the content list into a single string with line breaks
+        return "\n".join(content_list)
+
     def get_page_content(self, page_id):
         """
         Makes a GET request to the Notion API and returns the page content.
@@ -31,12 +50,11 @@ class NotionAPI:
         response = requests.get(url, headers=self.headers)
         response.raise_for_status()
         data = response.json()
-        print(data)
+
         if data and 'results' in data:
             try:
-                return data['results'][0]['paragraph']['rich_text'][0]['text']['content']
-            # TODO e se a página tiver conteúdo e subpáginas? possívelmente vai dar erro na extração de subpáginas
-            # SOLUÇÃO criar a requisição na própria subpages
+                content = self._extract_blocks_content(data)
+                return content
             except (KeyError, IndexError):
                 print("Não foi possível acessar o conteúdo do bloco.")
                 return data
