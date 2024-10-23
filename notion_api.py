@@ -1,5 +1,6 @@
 import requests
 
+
 class NotionAPI:
     """
     Class to interact with the Notion API.
@@ -68,30 +69,53 @@ class NotionAPI:
                     continue
         return child_pages
 
-    def search(self, query: str, filter_value: str = "page", filter_property: str = "object",
-               sort_direction: str = "ascending", sort_timestamp: str = "last_edited_time"):
+    def set_page_content(self, page_id: str, title: str, text: str):
         """
-        Makes a search request to the Notion API.
-        https://developers.notion.com/reference/post-search
-        :param query: Search term.
-        :param filter_value: Filter value.
-        :param filter_property: Filter property.
-        :param sort_direction: Sort direction.
-        :param sort_timestamp: Sort timestamp.
-        :return: Search result.
+        Sets the content of a page in Notion.
+
+        This method sends a PATCH request to the Notion API to update the specified page with a new title and content.
+        The content is structured as a heading and a paragraph.
+
+        :param page_id: The ID of the page to be updated.
+        :type page_id: str
+        :param title: The title to be set for the page.
+        :type title: str
+        :param text: The main content to be added to the page.
+        :type text: str
+        :return: The response from the API, which includes the status of the request and any returned data.
+        :rtype: dict
         """
-        url = self.base_url + "search"
+        url = self.base_url + f"blocks/{page_id}/children"
         data = {
-            "query": query,
-            "filter": {
-                "value": filter_value,
-                "property": filter_property
-            },
-            "sort": {
-                "direction": sort_direction,
-                "timestamp": sort_timestamp
-            }
+            "children": [
+                {
+                    "object": "block",
+                    "type": "heading_3",
+                    "heading_3": {
+                        "rich_text": [{"type": "text", "text": {"content": title}}]
+                    }
+                },
+                {
+                    "object": "block",
+                    "type": "paragraph",
+                    "paragraph": {
+                        "rich_text": [
+                            {
+                                "type": "text",
+                                "text": {
+                                    "content": text
+                                    # "link": {"url": "https://en.wikipedia.org/wiki/Lacinato_kale"}
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
         }
-        response = requests.post(url, headers=self.headers, json=data)
-        response.raise_for_status()
+        # response = requests.patch(url, headers=headers, data=json.dumps(data))
+        response = requests.patch(url, headers=self.headers, json=data)
+        if response.status_code == 200:
+            print("Success:", response.json())
+        else:
+            print("Error:", response.status_code, response.text)
         return response.json()
