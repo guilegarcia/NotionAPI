@@ -43,10 +43,10 @@ class NotionAPI:
 
     def get_child_pages(self, page_id: str):
         """
-        Returns the titles of all child pages of a Notion page.
+        Returns the child pages of a Notion page.
 
         :param page_id: ID of the parent page.
-        :return: List of child page titles.
+        :return: List of child pages.
         """
         data = self.get_page_content(page_id)
         child_pages = list()
